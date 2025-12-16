@@ -1,4 +1,5 @@
-import React, { useReducer, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 const AddOrderForm = () => {
   const [formData, setFormData] = useState(
@@ -28,6 +29,8 @@ const AddOrderForm = () => {
   const registerCheckBox = useRef(null);
   const inputEmailRef = useRef(null);
   const inputPasswordConfirmRef = useRef(null);
+
+  const navigate = useNavigate();
 
   function createFormDataToSend(formData, register) {
     const formDataToSend = new FormData();
@@ -70,9 +73,6 @@ const AddOrderForm = () => {
     const url = 'https://pets.xn--80ahdri7a.site/api/pets';
     const response = await fetch(url, {
       method: 'POST',
-      // headers: {
-      //   'Content-Type': 'multipart/form-data'
-      // },
       body: formDataToSend
     })
 
@@ -263,19 +263,19 @@ const AddOrderForm = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header d-flex justify-content-between">
-                <button className="btn" onClick={() => window.location.reload()} aria-label="Close" ><img width='24' height='24' src="/images/close-x.svg" alt="Закрыть" /></button>
+                <button className="btn" onClick={() => navigate('/profile')} aria-label="Close" ><img width='24' height='24' src="/images/close-x.svg" alt="Закрыть" /></button>
               </div>
               <div className="modal-body">
                 <p>Объявление добавлено</p>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary"
-                  onClick={() => window.location.reload()}>Закрыть</button>
+                  onClick={() => navigate('/profile')}>Закрыть</button>
               </div>
             </div>
           </div>
         </div>
-        <button className="btn btn-dark" type="submit">Submit form</button>
+        <button className="btn btn-dark" type="submit">Добавить объявление</button>
       </div>
     </form >
   </>

@@ -20,7 +20,7 @@ const ResultContainer = ({ results, isTried }) => {
       </div>
     }
     {
-      isTried && results.length === 0 && <div className="alert alert-danger" role="alert">
+      isTried && results.length === 0 && <div className="alert alert-info" role="alert">
         Ничего не найдено
       </div>
     }

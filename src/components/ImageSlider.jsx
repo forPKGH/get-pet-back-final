@@ -26,7 +26,7 @@ const imageSlider = ({ images, isLoading }) => {
               images.map((item, index) => {
                 if (item !== null)
                   return (
-                    <div key={index} className="carousel-item active h-100">
+                    <div key={index} className={`carousel-item h-100 ${index === 0 ? 'active' : ''}`}>
                       <div className="object-fit-contain h-100 d-flex justify-content-center align-items-center">
                         <img key={index} src={`https://pets.xn--80ahdri7a.site${item}`} className="d-block h-100" alt="Фото животного" />
                       </div>

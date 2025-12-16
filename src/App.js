@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import PetPage from "./components/PetPage";
 import AddOrderPage from "./pages/AddOrderPage";
+import EditOrderPage from "./pages/EditOrderPage";
+import SearchResultsPage from "./pages/SearchResultsPage";
 
 function App() {
   return (
@@ -16,12 +18,14 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/search/:query" element={<SearchResultsPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/pet/:id" element={<PetPage />} />
           <Route path="/add" element={<AddOrderPage />} />
+          <Route path="/edit/:id" element={<EditOrderPage />} />
         </Routes>
       </BrowserRouter>
     </>

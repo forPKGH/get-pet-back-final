@@ -4,37 +4,38 @@ import { Link, useNavigate } from "react-router";
 const UserOrders = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [id, setId] = useState(null);
 
   const navigate = useNavigate();
-
+  
   useEffect(() => {
-    getOrders();
-  }, []);
-
-  async function getOrders() {
-    const url = 'https://pets.xn--80ahdri7a.site/api/users/orders';
-    const token = localStorage.getItem('token')
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        navigate('/login');
+    async function getOrders() {
+      const url = 'https://pets.xn--80ahdri7a.site/api/users/orders';
+      const token = localStorage.getItem('token')
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      if (!response.ok) {
+        if (response.status === 401) {
+          navigate('/login');
+          return;
+        }
+        setError('Ошибка сервера');
         return;
       }
-      setError('Ошибка сервера');
-      return;
+      setError(null);
+      const data = await response.json();
+      console.log(data);
+      setData(data.data.orders);
     }
-    setError(null);
-    const data = await response.json();
-    console.log(data);
-    setData(data.data.orders);
-  }
+    getOrders();
+  }, [navigate]);
 
   async function deleteOrder(id) {
     const url = `https://pets.xn--80ahdri7a.site/api/users/orders/${id}`;
@@ -48,17 +49,25 @@ const UserOrders = () => {
       }
     });
 
-    if(!response.ok) {
-      if (response.status === 401) {
-        navigate('/login');
+    try {
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          navigate('/login');
+          return;
+        }
+        setError('Ошибка сервера');
         return;
       }
+
+      setError(null);
+      setData(prev => prev.filter(order => order.id !== id));
+      setShowModal(false);
+      setId(null);
+    } catch {
       setError('Ошибка сервера');
       return;
     }
-
-    setError(null);
-    setData(prev => prev.filter(order => order.id !== id));
   }
 
   return (
@@ -68,7 +77,10 @@ const UserOrders = () => {
           <div className="card" key={index}>
             <div className="card-header d-flex justify-content-between">
               id: {item.id}
-              <button onClick={(() => {deleteOrder(item.id)})} type="button" className="btn-close"></button>
+              <div className="d-flex align-items-center">
+                <button onClick={(() => { setShowModal(true); setId(item.id) })} type="button" className="btn">🗑️</button>
+                <button onClick={(() => navigate(`/edit/${item.id}`))} className="btn">✏️</button>
+              </div>
             </div>
             <div className="card-body d-flex gap-3 flex-wrap">
               <div className="object-fit-cover" style={{ minWidth: '80px' }}>
@@ -97,6 +109,25 @@ const UserOrders = () => {
             </div>
           )
         }
+      </div>
+
+      <div className={`modal fade ${showModal ? 'show d-block' : ''}`} style={{ display: showModal ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex={-1}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header d-flex justify-content-between">
+              <button className="btn" onClick={() => setShowModal(false)} aria-label="Close" ><img width='24' height='24' src="/images/close-x.svg" alt="Закрыть" /></button>
+            </div>
+            <div className="modal-body">
+              <p>Удалить объявление?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-danger"
+                onClick={() => deleteOrder(id)}>Удалить</button>
+              <button type="button" className="btn btn-secondary"
+                onClick={() => setShowModal(false)}>Закрыть</button>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )

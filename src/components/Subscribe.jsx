@@ -60,7 +60,7 @@ const Subscribe = () => {
             Вы успешно подписались
           </div>
         </div>
-        <button type="submit" className="btn btn-primary w-100">Подписаться</button>
+        <button type="submit" className="btn btn-dark w-100">Подписаться</button>
       </form>)}
     {error && (
       <div className="alert alert-danger mx-3" role="alert">
